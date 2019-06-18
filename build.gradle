@@ -1,0 +1,40 @@
+plugins {
+    id 'java-gradle-plugin'
+	id "com.gradle.plugin-publish" version "0.10.1"
+}
+
+description = 'Gradle plugin to generate a POM file and include it in a Jar archive'
+group = 'dev.trinkets'
+
+repositories {
+	// Should only use jcenter because that's what Gradle supports for plugins.
+	jcenter()
+}
+
+dependencies {
+    testImplementation 'junit:junit:4.12'
+}
+
+test {
+	dependsOn jar
+	systemProperty 'projectVersion', "$project.version"
+	testLogging.showStandardStreams = true
+}
+
+gradlePlugin {
+    plugins {
+        pomTrinkets {
+            id = 'dev.trinkets.pom'
+            implementationClass = 'dev.trinkets.gradle.plugin.pom.PomPlugin'
+			displayName = project.description
+			description = project.description
+        }
+    }
+}
+
+pluginBundle {
+	website = 'https://pom.gradle.trinkets.dev'
+	vcsUrl = 'https://github.com/mleveill/gradle-plugin-pom.git'
+	description = project.description
+	tags = ['trinkets', 'pom', 'jar', 'archive']
+}
