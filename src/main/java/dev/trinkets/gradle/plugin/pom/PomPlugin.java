@@ -6,33 +6,48 @@ import org.gradle.api.Task;
 import org.gradle.api.publish.maven.MavenPublication;
 
 /**
+ * <p>
  * Provides utilities for creating a POM file and including it in a Jar.
- *
- * These properties are set in the pom:
- *		groupId		-&gt; project.group
- *		artifactId	-&gt; project.name
- *		version		-&gt; project.version
- *		name		-&gt; project.name
- *		description	-&gt; project.description
- *
- * Applies the "maven-publish" plugin.
- *
- * Example use in a build.gradle file (note the plugin id differs from the package name and Maven artifactId):
- *
- *	# Without existing publication
- *	plugins { id 'dev.trinkets.pom' }
- *	tpom { pomToJar newPub('Java'), jar }
- *
- *	# With existing publication
- *	plugins { id 'dev.trinkets.pom' }
- *	publishing {
- *		publications {
- *			MyPub(MavenPublication) {
- *				from components.java
- *			}
- *		}
- *	}
- *	tpom { pomToJar pub('MyPub'), jar }
+ * </p>
+ * <p>
+ * These properties are set in the pom:<br>
+ * <pre>
+ *     groupId     -&gt; project.group
+ *     artifactId  -&gt; project.name
+ *     version     -&gt; project.version
+ *     name        -&gt; project.name
+ *     description -&gt; project.description
+ * </pre>
+ * <p>
+ * Applies the "maven-publish" plugin.<br>
+ * </p>
+ * <p>
+ * Examples use in a build.gradle file (note the plugin id differs from the package name and Maven artifactId):<br>
+ * <br>
+ * Example 1 - without existing publication:<br>
+ * <pre>
+ * plugins {
+ *     id 'dev.trinkets.pom'
+ * }
+ * tpom {
+ *     pomToJar newPub('Java'), jar
+ * }</pre>
+ * Example 2 - with existing publication:<br>
+ * <br>
+ * <pre>
+ * plugins {
+ *     id 'dev.trinkets.pom'
+ * }
+ * publishing {
+ *     publications {
+ *         MyPub(MavenPublication) {
+ *             from components.java
+ *         }
+ *     }
+ * }
+ * tpom {
+ *     pomToJar pub('MyPub'), jar
+ * }</pre>
  */
 public class PomPlugin implements Plugin<Project> {
 

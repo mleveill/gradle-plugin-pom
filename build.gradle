@@ -38,3 +38,17 @@ pluginBundle {
 	description = project.description
 	tags = ['trinkets', 'pom', 'jar', 'archive']
 }
+
+tasks.register("copyJavadoc") {
+    group = 'docs'
+    description = 'Copies JavaDoc to /docs folder'
+	dependsOn javadoc
+
+    doLast {
+		copy {
+			from 'build/docs'
+			into 'docs'
+			include 'javadoc/**'
+		}
+    }
+}
