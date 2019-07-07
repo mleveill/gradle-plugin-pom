@@ -56,26 +56,24 @@ public class PomPluginTest {
 
 		writeFile(gradleProps, "version=" + version);
 
-        writeFile(settingsFile, "rootProject.name = '" + artifact + "'");
-
-        String buildFileContent = "buildscript {\n"
+        writeFile(settingsFile, "pluginManagement {\n"
 								+ "    repositories {\n"
-								+ "        flatDir dirs: '" + new File("build/libs").getAbsolutePath().replace("\\", "/") + "' // pom-trinkets plugin\n"
-								+ "    }\n"
-								+ "    dependencies {\n"
-								+ "        classpath 'dev.trinkets:pom-trinkets:" + System.getProperty("projectVersion") + "'\n"
+								+ "        flatDir dirs: '" + new File("build/libs").getAbsolutePath().replace("\\", "/") + "' // dev.trinkets.pom plugin\n"
 								+ "    }\n"
 								+ "}\n"
-								+ "plugins {\n"
+								+ "rootProject.name = '" + artifact + "'\n");
+
+		// TODO: needs the special auxillary gradle plugin pom for this to work:
+
+        String buildFileContent = "plugins {\n"
 								+ "    id 'java-library'\n"
-								// TODO: + "id 'dev.trinkets.pom' version '1.+'\n"
+								+ "    id 'dev.trinkets.pom' version '" + System.getProperty("projectVersion") + "'\n"
 								+ "}\n"
-								+ "apply plugin: 'dev.trinkets.pom'\n"
 								+ "group = '" + group + "'\n"
 								+ "tpom { pomToJar newPub('Java'), jar }\n";
 
         writeFile(buildFile, buildFileContent);
-		System.err.println("Build file: " + buildFile.getAbsolutePath());
+		//System.err.println("Build file: " + buildFile.getAbsolutePath());
 
         BuildResult result = GradleRunner.create()
             .withProjectDir(testProjectDir.getRoot())
@@ -122,14 +120,9 @@ public class PomPluginTest {
 	}
 
     private void writeFile(File destination, String content) throws IOException {
-        BufferedWriter output = null;
-        try {
-            output = new BufferedWriter(new FileWriter(destination));
+        try (FileWriter out = new FileWriter(destination);
+				BufferedWriter output = new BufferedWriter(out)) {
             output.write(content);
-        } finally {
-            if (output != null) {
-                output.close();
-            }
         }
     }
 }
